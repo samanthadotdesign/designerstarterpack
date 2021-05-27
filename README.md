@@ -35,10 +35,9 @@ _Click the image to direct to video_
 _or view the [Figma prototype](https://www.figma.com/proto/TiH1DMdEklZRkH2A9zgZiO/Designer-Starter-Pack-2021?page-id=1%3A13&node-id=1%3A15&viewport=225%2C294%2C0.08014687895774841&scaling=scale-down)_
 
 ###### USER DASHBOARD
-[![User dashboard](https://user-images.githubusercontent.com/31368622/119685946-6b457880-be78-11eb-871a-210ee0612fd5.png)](https://youtu.be/PnMmIwZ6VvQ "User dashboard")
+[![User dashboard](https://user-images.githubusercontent.com/31368622/119685946-6b457880-be78-11eb-871a-210ee0612fd5.png)](https://youtu.be/Kyb1dWyJijg")
 _Click the image to direct to video_
 _or view the [Figma prototype](https://www.figma.com/proto/TiH1DMdEklZRkH2A9zgZiO/Designer-Starter-Pack-2021?page-id=15%3A0&node-id=21%3A270&viewport=564%2C81%2C0.3625868260860443&scaling=min-zoom)_
 
 ## :construction: ERD  
-![ERD](https://user-images.githubusercontent.com/31368622/119684196-e4dc6700-be76-11eb-8347-bccea62c887e.png)
-
+![ERD](https://user-images.githubusercontent.com/31368622/119830587-01d47100-bf2f-11eb-92b2-bdb184ef914f.png) 
