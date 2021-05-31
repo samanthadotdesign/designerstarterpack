@@ -17,7 +17,7 @@
           <div class="resources">
             <h2>Resources</h2>
             <ul>
-              <% resources.filter( resource => resource.skill_id === skills.id
+              <% resources.filter( resource => resource.skill_id === skill.id
               ).forEach( (resource) => { %>
               <li>
                 <a href="<%= resource.resource_link %> "
