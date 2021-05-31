@@ -1,0 +1,30 @@
+{
+  "name": "starterpack",
+  "version": "1.0.0",
+  "description": "## :seedling:\tBackground 1. As a product designer at a lean product startup, I have been bringing my non-designer colleagues closer to the product development process via Figma. Simply having more people find a page and add their comments benefits the entire team.   2. Through my experiences designing and conducting Figma workshops for Tech for She, Friends of Figma Singapore, Padang.Co, and at Funding Societies, I've become more aware of how different beginners learn.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samanthadotdesign/designerstarterpack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samanthadotdesign/designerstarterpack/issues"
+  },
+  "homepage": "https://github.com/samanthadotdesign/designerstarterpack#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "pg": "^8.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.27.0",
+    "eslint-plugin-react": "^7.23.2"
+  }
+}

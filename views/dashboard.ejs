@@ -1,0 +1,43 @@
+<body>
+  <%- include('./partials/header') -%>
+
+  <!-- Set maximum container size for ultra wide widths -->
+  <main class="gallery">
+    <% sections.forEach( (section) => { %>
+    <!-- Logic for when we put "full-width-category" class or not -->
+    <div class="section">
+      <h1><%= section.section_name %></h1>
+
+      <% categories.filter(category => category.section_id ===
+      section.id).forEach ( (category) => { %> <% skills.filter(skill =>
+      skill.category_id === category.id).forEach ( (skill) => { %>
+
+      <ul class="gallery-list">
+        <li id="<%= category.id %>">
+          <div class="resources">
+            <h2>Resources</h2>
+            <ul>
+              <% resources.filter( resource => resource.skill_id === skills.id
+              ).forEach( (resource) => { %>
+              <li>
+                <a href="<%= resource.resource_link %> "
+                  ><%= resource.resource_name %>
+                </a>
+              </li>
+              <% })%>
+              <button class="skill_id">Complete Skill</button>
+              <button class="skill_id uncomplete">Uncomplete Skill</button>
+            </ul>
+          </div>
+          <figure>
+            <img src="<%= skill.skill_img %>" alt="<%= skill.skill_name %>" />
+            <figcaption><%= skill.skill_name %></figcaption>
+          </figure>
+        </li>
+      </ul>
+
+      <% }) %> <% }) %>
+    </div>
+    <% }) %>
+  </main>
+</body>
