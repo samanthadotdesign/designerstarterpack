@@ -22,7 +22,7 @@ html {
   --med-bg: #fff;
 
   --dark-neutral: #000;
-  --mid-neutral: #000;
+  --mid-neutral: #ccc;
   --light-neutral: #ccc;
   --white: #fff;
 
@@ -54,13 +54,22 @@ html {
 
 /* ===== TYPOGRAPHY ===== */
 
-h1 {
+h1,
+h2,
+em {
   font-family: var(--display);
+  font-style: normal;
+}
+
+h2 {
+  font-size: var(--d-s);
+  margin-bottom: var(--d-xxs);
 }
 
 body,
 button {
   font-family: var(--default);
+  font-size: var(--d-s);
 }
 
 figcaption {
@@ -82,8 +91,9 @@ figcaption {
   margin-top: var(--d-s);
 }
 
-.gallery-list > li > div.resources > ul > form.button {
+.gallery-list > li > div.resources > ul > form button {
   width: 100%;
+  margin: 0;
 }
 
 /* ===== GLOBAL STYLES ===== */
@@ -95,7 +105,37 @@ ul {
 }
 
 a {
+  color: var(--dark-neutral);
   text-decoration: none;
+  transition: color 0.5s ease;
+}
+
+p a,
+p a:visited {
+  color: var(--primary);
+}
+
+p a:hover,
+a:hover {
+  color: var(--mid-neutral);
+}
+
+/* ===== BUTTON STYLES ===== */
+
+button.primary-btn {
+  padding: var(--d-xxs);
+  width: 100%;
+  background-color: var(--dark-neutral);
+  color: var(--white);
+  transition: all 0.5s ease-in;
+  outline: none;
+  border: none;
+  margin-bottom: var(--d-s);
+  text-align: left;
+}
+
+button.primary-btn:hover {
+  background-color: var(--mid-neutral);
 }
 
 /* ===== HEADER ===== */
@@ -116,6 +156,23 @@ nav a {
   margin-left: var(--d-xs);
   color: var(--primary);
   font-size: var(--d-s);
+}
+
+/* ===== CONTAINER ===== */
+
+main.container {
+  padding: 0 var(--d-m) var(--d-m) var(--d-m);
+}
+
+div.about {
+  width: 40vw;
+}
+
+.divider-line {
+  height: 0.5px;
+  background-color: var(--mid-neutral);
+  width: 100%;
+  margin: var(--d-s) 0;
 }
 
 /* ===== DASHBOARD GRID LAYOUT ===== */
@@ -190,19 +247,15 @@ main.gallery {
   align-items: center;
 }
 
-.category-badge button {
-  padding: 24px;
-  font-size: 16px;
-}
-
 .gallery-list > li {
   position: relative;
 }
 
 .gallery-list > li > div.resources {
   visibility: hidden;
-  background-color: var(--dark-neutral);
-  color: var(--white);
+  background-color: var(--white);
+  color: var(--dark-neutral);
+  border: 1.5px solid var(--dark-neutral);
   padding: var(--d-xs);
   width: 200px;
 

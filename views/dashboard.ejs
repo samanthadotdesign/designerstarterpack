@@ -27,8 +27,23 @@
                 </a>
               </li>
               <% })%>
-              <button class="skill_id">Complete Skill</button>
-              <button class="skill_id uncomplete">Uncomplete Skill</button>
+              <form
+                action="/complete-skill/<%= skill.id %>?_method=PUT"
+                method="POST"
+              >
+                <button type="submit" value="complete-skill" class="btn">
+                  Complete Skill
+                </button>
+              </form>
+
+              <form
+                action="/uncomplete-skill/<%= skill.id %>?_method=PUT"
+                method="POST"
+              >
+                <button type="submit" value="uncomplete-skill" class="btn">
+                  Uncomplete Skill
+                </button>
+              </form>
             </ul>
           </div>
           <figure>
