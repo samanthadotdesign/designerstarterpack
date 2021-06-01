@@ -2,6 +2,7 @@ import pg from 'pg';
 import express from 'express';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
+import jsSHA from 'jssha';
 
 /* ============ CONFIGURATION =========== */
 
@@ -40,7 +41,12 @@ pool.connect();
 
 /* ============ DASHBOARD =========== */
 
-app.get('/', async (req, res) => {
+app.get('/', async (request, response) => {
+  if (request.query) {
+    // request.query returns { skillId: '9', uncomplete: 'hidden' }
+    console.log(request.query);
+  }
+
   const listSectionsQuery = 'SELECT * FROM sections';
   const listCategoriesQuery = 'SELECT * FROM categories';
   const listSkillsQuery = 'SELECT * FROM skills';
@@ -59,7 +65,7 @@ app.get('/', async (req, res) => {
     const listResourcesRes = await pool.query(listResourcesQuery);
     const resourcesArr = listResourcesRes.rows;
 
-    res.render('dashboard', {
+    response.render('dashboard', {
       sections: sectionsArr, categories: categoriesArr, skills: skillsArr, resources: resourcesArr,
     });
   } catch (err) {
@@ -73,15 +79,31 @@ app.get('/', async (req, res) => {
  * When user clicks "Complete Skill" inside div.resources
  * Updates SQL table user_skills
  */
-app.put('/complete-skill/:id', async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.cookies;
+app.put('/complete-skill/:id', async (request, response) => {
+  const { id: skillId } = request.params;
+  const { userId } = request.cookies;
 
-  const markSkillCompleteQuery = `UPDATE user_skills SET skill_completed=true WHERE user_id=${userId} AND skill_id=${id}`;
+  // If user has marked it as uncomplete before, entry exists in user_skills table
+  const skillExistsQuery = `SELECT * FROM user_skills WHERE user_id=${userId} AND skill_id=${skillId}`;
 
   try {
-    await pool.query(markSkillCompleteQuery);
-    res.redirect('/');
+    const skillExistsRes = await pool.query(skillExistsQuery);
+    // skillExistsRes.rows[0]
+    // returns existing line { id: 1, user_id: 1, skill_id: 1, skill_completed: false }
+    const userSkill = skillExistsRes.rows[0];
+
+    // If the row doesn't exist
+    if (userSkill === undefined) {
+      // Add the row inside database
+      const addSkillQuery = `INSERT INTO user_skills (user_id, skill_id, skill_completed) VALUES (${userId}, ${skillId}, true)`;
+      const addSkillRes = await pool.query(addSkillQuery);
+    } else {
+      // Update the row
+      const updateSkillQuery = `UPDATE user_skills SET skill_completed=true WHERE user_id=${userId} AND skill_id=${skillId}`;
+      const updateSkillRes = await pool.query(updateSkillQuery);
+    }
+    // Toggle the Complete -> Uncomplete button
+    response.redirect(`/?skillId=${skillId}&uncomplete=hidden`);
   } catch (err) {
     console.log(err.stack);
   }
@@ -106,7 +128,71 @@ app.put('/uncomplete-skill/:id', async (req, res) => {
   }
 });
 
-/* ============ LOGIN =========== */
+/* ============ HOMEPAGE & LOGIN =========== */
+
+app.get('/home', (request, response) => {
+  response.render('homepage');
+});
+
+// Renders a Sign Up page
+app.get('/signup', (req, res) => {
+  res.render('signup');
+});
+
+// Allows the user to sign up
+app.post('/signup', (request, response) => {
+  // initialise the SHA object
+  const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
+  // input the password from the request to the SHA object
+  shaObj.update(request.body.password);
+  // get the hashed password as output from the SHA object
+  const hashedPassword = shaObj.getHash('HEX');
+
+  // store the hashed password in our DB
+  const values = [request.body.name, request.body.email, hashedPassword];
+
+  const addUserQuery = 'INSERT INTO users (user_name, email, hashed_password) VALUES ($1, $2, $3) RETURNING *';
+  pool.query(addUserQuery, values, (error, result) => {
+    response.redirect('/');
+  });
+});
+
+// Allows user to log in
+app.post('/login', (request, response) => {
+  const { email: inputEmail, password: inputPassword } = request.body;
+
+  const selectUserQuery = `SELECT * FROM users WHERE email='${inputEmail}'`;
+
+  pool.query(selectUserQuery, (err, res) => {
+    // Query error
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    // User's email does not exist
+    if (res.rowCount === 0) {
+      console.log('We couldn\'t find your email. If you can\'t remember your account, we can send you a reminder.');
+      return;
+    }
+    // User's email exists
+    // res.rows returns array with email objects [ { id: 1, user_name: 'Samantha', ... }]
+    const { id: userId, user_name, hashed_password: savedPassword } = res.rows[0];
+
+    const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
+    shaObj.update(inputPassword);
+    const hashedInputPassword = shaObj.getHash('HEX');
+
+    if (inputPassword !== savedPassword) {
+      console.log('We didn\'t recognize your password. Please try again!');
+      return;
+    }
+
+    response.cookie('loggedIn', true);
+    response.cookie('userId', userId);
+    response.send('logged in!');
+  });
+});
 
 /* ============ CONTRIBUTE RESOURCES =========== */
 

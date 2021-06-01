@@ -1,0 +1,18 @@
+<body>
+  <%- include('./partials/header') -%>
+  <h1>Sign up</h1>
+
+  <form action="/signup" method="POST">
+    <input type="text" name="name" placeholder="Name" />
+    <input type="text" name="email" placeholder="Email" />
+    <input type="password" name="password" placeholder="password" />
+    <button type="submit" value="signup">Sign up</button>
+  </form>
+
+  <h1>Log in</h1>
+  <form action="/login" method="POST">
+    <input type="text" name="email" placeholder="Email" />
+    <input type="password" name="password" placeholder="Password" />
+    <button type="submit" value="login">Log in</button>
+  </form>
+</body>

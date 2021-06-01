@@ -31,7 +31,11 @@
                 action="/complete-skill/<%= skill.id %>?_method=PUT"
                 method="POST"
               >
-                <button type="submit" value="complete-skill" class="btn">
+                <button
+                  type="submit"
+                  value="complete-skill"
+                  class="secondary-btn"
+                >
                   Complete Skill
                 </button>
               </form>
@@ -40,7 +44,11 @@
                 action="/uncomplete-skill/<%= skill.id %>?_method=PUT"
                 method="POST"
               >
-                <button type="submit" value="uncomplete-skill" class="btn">
+                <button
+                  type="submit"
+                  value="uncomplete-skill"
+                  class="secondary-btn hidden"
+                >
                   Uncomplete Skill
                 </button>
               </form>

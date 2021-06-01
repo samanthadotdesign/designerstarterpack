@@ -72,6 +72,10 @@ button {
   font-size: var(--d-s);
 }
 
+input {
+  font-family: var(--default);
+}
+
 figcaption {
   font-size: var(--d-xs);
   margin-top: var(--d-xxs);
@@ -89,11 +93,6 @@ figcaption {
 
 .gallery-list > li > div.resources > ul > form {
   margin-top: var(--d-s);
-}
-
-.gallery-list > li > div.resources > ul > form button {
-  width: 100%;
-  margin: 0;
 }
 
 /* ===== GLOBAL STYLES ===== */
@@ -116,7 +115,8 @@ p a:visited {
 }
 
 p a:hover,
-a:hover {
+a:hover,
+button.nav-btn:hover {
   color: var(--mid-neutral);
 }
 
@@ -138,6 +138,49 @@ button.primary-btn:hover {
   background-color: var(--mid-neutral);
 }
 
+button.secondary-btn {
+  width: 100%;
+  padding: 4px;
+  font-size: var(--d-xs);
+  background-color: var(--white);
+  outline: none;
+  border: 1.5px solid var(--dark-neutral);
+  text-align: center;
+  cursor: pointer;
+  margin: 0;
+}
+
+button.secondary-btn:hover {
+  background-color: var(--light-neutral);
+}
+
+/* Helper class to toggle hidden or visible */
+.hidden {
+  display: none;
+}
+
+button.nav-btn,
+.btn-link {
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color 0.5s ease;
+}
+
+nav a,
+button.nav-btn {
+  margin-left: var(--d-xs);
+  color: var(--primary);
+  font-size: var(--d-s);
+}
+
+.btn-link {
+  color: var(--accent);
+}
+
 /* ===== HEADER ===== */
 
 header {
@@ -150,12 +193,6 @@ header {
 header h1,
 h1 {
   font-size: var(--d-l);
-}
-
-nav a {
-  margin-left: var(--d-xs);
-  color: var(--primary);
-  font-size: var(--d-s);
 }
 
 /* ===== CONTAINER ===== */
@@ -173,6 +210,18 @@ div.about {
   background-color: var(--mid-neutral);
   width: 100%;
   margin: var(--d-s) 0;
+}
+
+section.hero {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+section.hero img {
+  max-height: 250px;
 }
 
 /* ===== DASHBOARD GRID LAYOUT ===== */
@@ -256,7 +305,7 @@ main.gallery {
   background-color: var(--white);
   color: var(--dark-neutral);
   border: 1.5px solid var(--dark-neutral);
-  padding: var(--d-xs);
+  padding: var(--d-xs) var(--d-xs) 0 var(--d-xs);
   width: 200px;
 
   position: absolute;
@@ -283,4 +332,85 @@ main.gallery {
 
 button.uncomplete {
   display: none;
+}
+
+/* ===== MODAL ===== */
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: var(--white);
+  margin: 12% auto; /* 15% from the top and centered */
+  padding: var(--d-m);
+  border: 2px solid var(--dark-neutral);
+  width: 350px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Increase hit-area */
+.close-btn {
+  position: absolute;
+  top: var(--d-xxs);
+  right: var(--d-xs);
+  padding: var(--d-xxs) var(--d-xs);
+  cursor: pointer;
+  color: var(--mid-neutral);
+  transition: color 0.5s ease;
+}
+
+/* The Close Button */
+.close {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: var(--dark-neutral);
+  text-decoration: none;
+}
+
+/* ======= FORM ======= */
+
+.form-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 85%;
+}
+
+h1.modal-header {
+  margin: 0 0 var(--d-l) 0;
+}
+
+input {
+  border: 2px solid var(--dark-neutral);
+  background-color: var(--white);
+  color: var(--dark-neutral);
+  padding: var(--d-xxs);
+  margin-bottom: var(--d-xs);
+  width: 100%;
+  outline: var(--accent);
+}
+
+.form-div button {
+  margin-top: var(--d-xs);
+  text-align: center;
 }

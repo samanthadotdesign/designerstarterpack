@@ -1,0 +1,88 @@
+<!-- Login Modal -->
+<div id="login-modal" class="modal">
+  <div class="modal-content">
+    <div class="close-btn">
+      <span class="close">&times;</span>
+    </div>
+
+    <h1 class="modal-header">Log in</h1>
+
+    <form action="/login" method="POST" class="form-div">
+      <input type="text" name="email" placeholder="Email" />
+      <input type="password" name="password" placeholder="Password" />
+      <button type="submit" value="login" class="primary-btn">Log in</button>
+    </form>
+
+    <p>No account?
+    <span id="signup-instead" class="btn-link">Create one</p>
+  </div>
+</div>
+
+<!-- Sign up Modal -->
+<div id="signup-modal" class="modal">
+  <div class="modal-content">
+    <div class="close-btn">
+      <span class="close">&times;</span>
+    </div>
+
+    <h1 class="modal-header">Sign up</h1>
+
+    <form action="/signup" method="POST" class="form-div">
+      <input type="text" name="name" placeholder="Name" />
+      <input type="text" name="email" placeholder="Email" />
+      <input type="password" name="password" placeholder="Password" />
+      <button type="submit" value="signup" class="primary-btn">Sign up</button>
+    </form>
+
+    <p>Already have an account?
+    <span id="login-instead" class="btn-link">Log in</p></p>
+  </div>
+</div>
+
+<script>
+  const closeBtnEl = document.querySelector(".close-btn");
+
+  const loginBtnEl = document.getElementById("login");
+  const loginModalEl = document.getElementById("login-modal");
+  const loginInstead = document.getElementById("login-instead");
+
+  const signupBtnEl = document.getElementById("signup");
+  const signupModalEl = document.getElementById("signup-modal");
+  const signupInstead = document.getElementById("signup-instead");
+
+  // When user clicks Sign up
+  signupBtnEl.onclick = function () {
+    signupModalEl.style.display = "block";
+    loginModalEl.style.display = "none";
+  };
+
+  signupInstead.onclick = function () {
+    signupModalEl.style.display = "block";
+    loginModalEl.style.display = "none";
+  };
+
+  // When user clicks Log in
+  loginBtnEl.onclick = function () {
+    loginModalEl.style.display = "block";
+    signupModalEl.style.display = "none";
+  };
+
+  loginInstead.onclick = function () {
+    loginModalEl.style.display = "block";
+    signupModalEl.style.display = "none";
+  };
+
+  // When the user clicks (x), close the modal
+  closeBtnEl.onclick = function () {
+    loginModalEl.style.display = "none";
+    signupModalEl.style.display = "none";
+  };
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = (event) => {
+    if (event.target == loginModalEl || event.target == signupModalEl) {
+      loginModalEl.style.display = "none";
+      signupModalEl.style.display = "none";
+    }
+  };
+</script>
