@@ -1,3 +1,13 @@
+@font-face {
+  font-family: "Atkinson Bold";
+  src: url("../assets/fonts/Atkinson-Hyperlegible-Bold-102a.woff2");
+}
+
+@font-face {
+  font-family: "Atkinson Regular";
+  src: url("../assets/fonts/Atkinson-Hyperlegible-Regular-102a.woff2");
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -14,6 +24,66 @@ html {
   --dark-neutral: #000;
   --mid-neutral: #000;
   --light-neutral: #ccc;
+  --white: #fff;
+
+  --display: "Atkinson Bold";
+  --default: "Atkinson Regular";
+
+  /* Spacing & font size scale */
+  --d-xxs: 8px;
+  --m-xxs: 4px;
+
+  --d-xs: 12px;
+  --m-xs: 8px;
+
+  --d-s: 16px;
+  --m-s: 12px;
+
+  --d-m: 24px;
+  --m-m: 16px;
+
+  --d-l: 32px;
+  --m-l: 24px;
+
+  --d-xl: 48px;
+  --m-xl: 32px;
+
+  --d-xxl: 60px;
+  --m-xxl: 48px;
+}
+
+/* ===== TYPOGRAPHY ===== */
+
+h1 {
+  font-family: var(--display);
+}
+
+body,
+button {
+  font-family: var(--default);
+}
+
+figcaption {
+  font-size: var(--d-xs);
+  margin-top: var(--d-xxs);
+  text-align: center;
+}
+
+.gallery-list > li > div.resources > h2 {
+  font-size: var(--d-s);
+  margin-bottom: var(--d-xxs);
+}
+
+.gallery-list > li > div.resources > ul > li > a {
+  font-size: var(--d-xs);
+}
+
+.gallery-list > li > div.resources > ul > form {
+  margin-top: var(--d-s);
+}
+
+.gallery-list > li > div.resources > ul > form.button {
+  width: 100%;
 }
 
 /* ===== GLOBAL STYLES ===== */
@@ -24,20 +94,37 @@ ul {
   margin: 0;
 }
 
-/* ===== HEADER ===== */
-
-header {
-  height: 60px;
-  background-color: pink;
+a {
+  text-decoration: none;
 }
 
 /* ===== HEADER ===== */
 
+header {
+  padding: var(--d-xs) var(--d-m);
+  background-color: var(--light-bg);
+  display: flex;
+  justify-content: space-between;
+}
+
+header h1,
+h1 {
+  font-size: var(--d-l);
+}
+
+nav a {
+  margin-left: var(--d-xs);
+  color: var(--primary);
+  font-size: var(--d-s);
+}
+
+/* ===== DASHBOARD GRID LAYOUT ===== */
+
 main.gallery {
-  padding: 24px;
+  padding: var(--d-m);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 60px;
+  grid-gap: var(--d-xxl);
 }
 
 .gallery > .section {
@@ -51,11 +138,12 @@ main.gallery {
 
 .gallery > .section > .gallery-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 60px);
-  grid-template-rows: repeat(auto-fit, minmax(60px, 1fr));
+  grid-template-columns: repeat(auto-fit, var(--d-xxl));
+  grid-template-rows: repeat(auto-fit, 1fr);
   grid-gap: 16px;
   grid-auto-flow: dense;
-  align-items: center;
+  align-items: start;
+  padding: var(--d-xs) 0;
 }
 
 @media only screen and (max-width: 500px) {
@@ -113,13 +201,15 @@ main.gallery {
 
 .gallery-list > li > div.resources {
   visibility: hidden;
-
-  background-color: lightcoral;
-  padding: 24px;
+  background-color: var(--dark-neutral);
+  color: var(--white);
+  padding: var(--d-xs);
+  width: 200px;
 
   position: absolute;
-  top: 100%;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-20%);
 
   z-index: 2;
 }

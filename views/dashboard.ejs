@@ -5,17 +5,19 @@
   <main class="gallery">
     <% sections.forEach( (section) => { %>
     <!-- Logic for when we put "full-width-category" class or not -->
-    <div class="section">
+    <div class="section full-width-category">
       <h1><%= section.section_name %></h1>
 
       <% categories.filter(category => category.section_id ===
-      section.id).forEach ( (category) => { %> <% skills.filter(skill =>
-      skill.category_id === category.id).forEach ( (skill) => { %>
+      section.id).forEach ( (category) => { %>
 
       <ul class="gallery-list">
+        <% skills.filter(skill => skill.category_id === category.id).forEach (
+        (skill) => { %>
+
         <li id="<%= category.id %>">
           <div class="resources">
-            <h2>Resources</h2>
+            <h2><%= skill.skill_name %></h2>
             <ul>
               <% resources.filter( resource => resource.skill_id === skill.id
               ).forEach( (resource) => { %>
@@ -34,9 +36,10 @@
             <figcaption><%= skill.skill_name %></figcaption>
           </figure>
         </li>
-      </ul>
 
-      <% }) %> <% }) %>
+        <% }) %>
+      </ul>
+      <% }) %>
     </div>
     <% }) %>
   </main>
