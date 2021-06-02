@@ -41,10 +41,19 @@ pool.connect();
 
 /* ============ DASHBOARD =========== */
 
+// Main route for homepage and user dashboard
 app.get('/', async (request, response) => {
   // Check if user is logged in or not
   // If user is not logged in, show homepage
   const { userId } = request.cookies;
+
+  console.log(userId);
+
+  // If the user does not exist, render the homepage
+  if (!userId) {
+    response.render('homepage');
+    return;
+  }
 
   // If user is logged in, show their dashboard with completed skills
   const skillsCompletedQuery = `SELECT skill_id FROM user_skills WHERE user_id=${userId} AND skill_completed=true`;
@@ -79,6 +88,7 @@ app.get('/', async (request, response) => {
     // For each completed skill, match the ids inside the main skills array of objects
     // And add a new key-property pair
     skillsArr.forEach((skill) => {
+      skill.muted = 'muted';
       skill.completeBtn = 'visible';
       skill.uncompleteBtn = 'hidden';
     });
@@ -87,11 +97,10 @@ app.get('/', async (request, response) => {
       const skillsCompletedObj = skillsArr.filter(
         (skill) => skill.id === skillCompleted.skill_id,
       )[0];
+      skillsCompletedObj.muted = 'not-muted';
       skillsCompletedObj.completeBtn = 'hidden';
       skillsCompletedObj.uncompleteBtn = 'visible';
     });
-
-    console.log(skillsArr);
 
     const listResourcesRes = await pool.query(listResourcesQuery);
     const resourcesArr = listResourcesRes.rows;
@@ -161,9 +170,9 @@ app.put('/uncomplete-skill/:id', async (req, res) => {
 
 /* ============ HOMEPAGE & LOGIN =========== */
 
-app.get('/home', (request, response) => {
-  response.render('homepage');
-});
+// app.get('/home', (request, response) => {
+//   response.render('homepage');
+// });
 
 // Renders a Sign Up page
 app.get('/signup', (req, res) => {

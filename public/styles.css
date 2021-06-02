@@ -272,6 +272,16 @@ main.gallery {
   object-fit: cover;
 }
 
+.muted {
+  filter: grayscale(100%);
+  opacity: 50%;
+}
+
+.not-muted {
+  filter: none;
+  opacity: 100%;
+}
+
 .category-badge {
   width: 100%;
   height: 100%;

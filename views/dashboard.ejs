@@ -57,7 +57,11 @@
             </div>
           </div>
           <figure>
-            <img src="<%= skill.skill_img %>" alt="<%= skill.skill_name %>" />
+            <img
+              src="<%= skill.skill_img %>"
+              alt="<%= skill.skill_name %>"
+              class="<%= skill.muted %>"
+            />
             <figcaption><%= skill.skill_name %></figcaption>
           </figure>
         </li>
