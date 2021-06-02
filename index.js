@@ -42,10 +42,17 @@ pool.connect();
 /* ============ DASHBOARD =========== */
 
 app.get('/', async (request, response) => {
-  if (request.query) {
-    // request.query returns { skillId: '9', uncomplete: 'hidden' }
-    console.log(request.query);
-  }
+  // Check if user is logged in or not
+  // If user is not logged in, show homepage
+  const { userId } = request.cookies;
+
+  // If user is logged in, show their dashboard with completed skills
+  const skillsCompletedQuery = `SELECT skill_id FROM user_skills WHERE user_id=${userId} AND skill_completed=true`;
+
+  // if (request.query) {
+  // request.query returns { skillId: '9', uncomplete: 'hidden' }
+  // console.log(request.query);
+  // }
 
   const listSectionsQuery = 'SELECT * FROM sections';
   const listCategoriesQuery = 'SELECT * FROM categories';
@@ -53,6 +60,12 @@ app.get('/', async (request, response) => {
   const listResourcesQuery = 'SELECT * FROM resources';
 
   try {
+    const skillsCompletedRes = await pool.query(skillsCompletedQuery);
+    const skillsCompletedArr = skillsCompletedRes.rows;
+    // skillsCompletedArr returns [ { skill_id: 2 }, { skill_id: 10 } ...]
+
+    // For each skill that is completed, show the color & "Uncomplete Skill" button
+
     const listSectionsRes = await pool.query(listSectionsQuery);
     const sectionsArr = listSectionsRes.rows;
 
@@ -61,6 +74,24 @@ app.get('/', async (request, response) => {
 
     const listSkillsRes = await pool.query(listSkillsQuery);
     const skillsArr = listSkillsRes.rows;
+
+    // For each skill that is completed, show the color & "Uncomplete Skill" button
+    // For each completed skill, match the ids inside the main skills array of objects
+    // And add a new key-property pair
+    skillsArr.forEach((skill) => {
+      skill.completeBtn = 'visible';
+      skill.uncompleteBtn = 'hidden';
+    });
+
+    skillsCompletedArr.forEach((skillCompleted) => {
+      const skillsCompletedObj = skillsArr.filter(
+        (skill) => skill.id === skillCompleted.skill_id,
+      )[0];
+      skillsCompletedObj.completeBtn = 'hidden';
+      skillsCompletedObj.uncompleteBtn = 'visible';
+    });
+
+    console.log(skillsArr);
 
     const listResourcesRes = await pool.query(listResourcesQuery);
     const resourcesArr = listResourcesRes.rows;
@@ -190,7 +221,7 @@ app.post('/login', (request, response) => {
 
     response.cookie('loggedIn', true);
     response.cookie('userId', userId);
-    response.send('logged in!');
+    response.redirect('/');
   });
 });
 

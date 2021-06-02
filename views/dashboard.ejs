@@ -17,42 +17,44 @@
 
         <li id="<%= category.id %>">
           <div class="resources">
-            <h2><%= skill.skill_name %></h2>
-            <ul>
-              <% resources.filter( resource => resource.skill_id === skill.id
-              ).forEach( (resource) => { %>
-              <li>
-                <a href="<%= resource.resource_link %> "
-                  ><%= resource.resource_name %>
-                </a>
-              </li>
-              <% })%>
-              <form
-                action="/complete-skill/<%= skill.id %>?_method=PUT"
-                method="POST"
-              >
-                <button
-                  type="submit"
-                  value="complete-skill"
-                  class="secondary-btn"
+            <div class="resource-content">
+              <h2><%= skill.skill_name %></h2>
+              <ul>
+                <% resources.filter( resource => resource.skill_id === skill.id
+                ).forEach( (resource) => { %>
+                <li>
+                  <a href="<%= resource.resource_link %> "
+                    ><%= resource.resource_name %>
+                  </a>
+                </li>
+                <% })%>
+                <form
+                  action="/complete-skill/<%= skill.id %>?_method=PUT"
+                  method="POST"
                 >
-                  Complete Skill
-                </button>
-              </form>
+                  <button
+                    type="submit"
+                    value="complete-skill"
+                    class="secondary-btn <%= skill.completeBtn %>"
+                  >
+                    Complete Skill
+                  </button>
+                </form>
 
-              <form
-                action="/uncomplete-skill/<%= skill.id %>?_method=PUT"
-                method="POST"
-              >
-                <button
-                  type="submit"
-                  value="uncomplete-skill"
-                  class="secondary-btn hidden"
+                <form
+                  action="/uncomplete-skill/<%= skill.id %>?_method=PUT"
+                  method="POST"
                 >
-                  Uncomplete Skill
-                </button>
-              </form>
-            </ul>
+                  <button
+                    type="submit"
+                    value="uncomplete-skill"
+                    class="secondary-btn <%= skill.uncompleteBtn %>"
+                  >
+                    Uncomplete Skill
+                  </button>
+                </form>
+              </ul>
+            </div>
           </div>
           <figure>
             <img src="<%= skill.skill_img %>" alt="<%= skill.skill_name %>" />

@@ -87,12 +87,14 @@ figcaption {
   margin-bottom: var(--d-xxs);
 }
 
-.gallery-list > li > div.resources > ul > li > a {
-  font-size: var(--d-xs);
-}
-
 .gallery-list > li > div.resources > ul > form {
   margin-top: var(--d-s);
+}
+
+div.resource-content {
+  margin: 0;
+  padding: 0;
+  font-size: var(--d-xs);
 }
 
 /* ===== GLOBAL STYLES ===== */
@@ -138,7 +140,8 @@ button.primary-btn:hover {
   background-color: var(--mid-neutral);
 }
 
-button.secondary-btn {
+button.secondary-btn,
+.visible {
   width: 100%;
   padding: 4px;
   font-size: var(--d-xs);
@@ -147,7 +150,7 @@ button.secondary-btn {
   border: 1.5px solid var(--dark-neutral);
   text-align: center;
   cursor: pointer;
-  margin: 0;
+  margin-top: var(--d-xs);
 }
 
 button.secondary-btn:hover {
@@ -305,8 +308,9 @@ main.gallery {
   background-color: var(--white);
   color: var(--dark-neutral);
   border: 1.5px solid var(--dark-neutral);
-  padding: var(--d-xs) var(--d-xs) 0 var(--d-xs);
+  padding: var(--d-xs);
   width: 200px;
+  height: fit-content;
 
   position: absolute;
   top: 50%;
