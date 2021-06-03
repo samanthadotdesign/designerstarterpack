@@ -41,76 +41,81 @@ pool.connect();
 
 /* ============ DASHBOARD =========== */
 
-// Main route for homepage and user dashboard
-app.get('/', async (request, response) => {
-  // Check if user is logged in or not
-  // If user is not logged in, show homepage
-  const { userId } = request.cookies;
-
-  console.log(userId);
-
-  // If the user does not exist, render the homepage
-  if (!userId) {
-    response.render('homepage');
-    return;
-  }
-
-  // If user is logged in, show their dashboard with completed skills
+/**
+ * Helper function to display sections, categories, skills, resources
+ * @returns {obj} – { sections, categories, skills, resources }
+ */
+const getDatabase = (userId, callback) => {
   const skillsCompletedQuery = `SELECT skill_id FROM user_skills WHERE user_id=${userId} AND skill_completed=true`;
-
-  // if (request.query) {
-  // request.query returns { skillId: '9', uncomplete: 'hidden' }
-  // console.log(request.query);
-  // }
-
   const listSectionsQuery = 'SELECT * FROM sections';
   const listCategoriesQuery = 'SELECT * FROM categories';
   const listSkillsQuery = 'SELECT * FROM skills';
   const listResourcesQuery = 'SELECT * FROM resources';
 
-  try {
-    const skillsCompletedRes = await pool.query(skillsCompletedQuery);
-    const skillsCompletedArr = skillsCompletedRes.rows;
-    // skillsCompletedArr returns [ { skill_id: 2 }, { skill_id: 10 } ...]
+  const listSectionsRes = pool.query(listSectionsQuery);
+  const listCategoriesRes = pool.query(listCategoriesQuery);
+  const listSkillsRes = pool.query(listSkillsQuery);
+  const listResourcesRes = pool.query(listResourcesQuery);
+  const skillsCompletedRes = pool.query(skillsCompletedQuery);
 
-    // For each skill that is completed, show the color & "Uncomplete Skill" button
+  Promise.all([listSectionsRes, listCategoriesRes, listSkillsRes, listResourcesRes, skillsCompletedRes]).then((values) => {
+    const sectionsArr = values[0].rows;
+    const categoriesArr = values[1].rows;
+    const skillsArr = values[2].rows;
+    const resourcesArr = values[3].rows;
+    const skillsCompletedArr = values[4].rows;
 
-    const listSectionsRes = await pool.query(listSectionsQuery);
-    const sectionsArr = listSectionsRes.rows;
+    callback(sectionsArr, categoriesArr, skillsArr, resourcesArr, skillsCompletedArr);
+    // callback returns array of arrays
+  });
+};
 
-    const listCategoriesRes = await pool.query(listCategoriesQuery);
-    const categoriesArr = listCategoriesRes.rows;
+/**
+ * Helper function to color the completed skills
+ */
+const colorSkills = (skillsArr, skillsCompletedArr) => {
+  // For each skill that is completed, show the color & "Uncomplete Skill" button
+  // For each completed skill, match the ids inside the main skills array of objects
+  // And add a new key-property pair
+  skillsArr.forEach((skill) => {
+    skill.muted = 'muted';
+    skill.completeBtn = 'visible';
+    skill.uncompleteBtn = 'hidden';
+  });
 
-    const listSkillsRes = await pool.query(listSkillsQuery);
-    const skillsArr = listSkillsRes.rows;
+  skillsCompletedArr.forEach((skillCompleted) => {
+    const skillsCompletedObj = skillsArr.filter(
+      (skill) => skill.id === skillCompleted.skill_id,
+    )[0];
+    skillsCompletedObj.muted = 'not-muted';
+    skillsCompletedObj.completeBtn = 'hidden';
+    skillsCompletedObj.uncompleteBtn = 'visible';
+  });
+};
 
-    // For each skill that is completed, show the color & "Uncomplete Skill" button
-    // For each completed skill, match the ids inside the main skills array of objects
-    // And add a new key-property pair
-    skillsArr.forEach((skill) => {
-      skill.muted = 'muted';
-      skill.completeBtn = 'visible';
-      skill.uncompleteBtn = 'hidden';
-    });
+/**
+ * Main route for homepage and user dashboard
+ */
+app.get('/', (request, response) => {
+  // Check if user is logged in or not
+  // If user is not logged in, show homepage
+  const { userId } = request.cookies;
 
-    skillsCompletedArr.forEach((skillCompleted) => {
-      const skillsCompletedObj = skillsArr.filter(
-        (skill) => skill.id === skillCompleted.skill_id,
-      )[0];
-      skillsCompletedObj.muted = 'not-muted';
-      skillsCompletedObj.completeBtn = 'hidden';
-      skillsCompletedObj.uncompleteBtn = 'visible';
-    });
-
-    const listResourcesRes = await pool.query(listResourcesQuery);
-    const resourcesArr = listResourcesRes.rows;
-
-    response.render('dashboard', {
-      sections: sectionsArr, categories: categoriesArr, skills: skillsArr, resources: resourcesArr,
-    });
-  } catch (err) {
-    console.log(err.stack);
+  // If the user does not exist, render the homepage
+  if (!userId) {
+    response.render('homepage');
   }
+
+  // If user is logged in, show their dashboard with completed skills
+  getDatabase(userId, (...results) => {
+    // results returns array of arrays of objects
+    const queryResultObject = {
+      sections: results[0], categories: results[1], skills: results[2], resources: results[3], skillsCompleted: results[4],
+    };
+    colorSkills(queryResultObject.skills, queryResultObject.skillsCompleted);
+
+    response.render('dashboard', queryResultObject);
+  });
 });
 
 /* ============ ACTIONS INSIDE DASHBOARD =========== */
@@ -143,7 +148,7 @@ app.put('/complete-skill/:id', async (request, response) => {
       const updateSkillRes = await pool.query(updateSkillQuery);
     }
     // Toggle the Complete -> Uncomplete button
-    response.redirect(`/?skillId=${skillId}&uncomplete=hidden`);
+    response.redirect('/');
   } catch (err) {
     console.log(err.stack);
   }
@@ -161,23 +166,21 @@ app.put('/uncomplete-skill/:id', async (req, res) => {
 
   try {
     await pool.query(markSkillUncompleteQuery);
-    console.log('done');
     res.redirect('/');
   } catch (err) {
     console.log(err.stack);
   }
 });
 
-/* ============ HOMEPAGE & LOGIN =========== */
+/**
+ * When user clicks "Claim badge"
+ *
+ */
+app.put('/claim-badge/:id', async (req, res) => {
 
-// app.get('/home', (request, response) => {
-//   response.render('homepage');
-// });
-
-// Renders a Sign Up page
-app.get('/signup', (req, res) => {
-  res.render('signup');
 });
+
+/* ============ HOMEPAGE & LOGIN =========== */
 
 // Allows the user to sign up
 app.post('/signup', (request, response) => {
@@ -192,7 +195,8 @@ app.post('/signup', (request, response) => {
   const values = [request.body.name, request.body.email, hashedPassword];
 
   const addUserQuery = 'INSERT INTO users (user_name, email, hashed_password) VALUES ($1, $2, $3) RETURNING *';
-  pool.query(addUserQuery, values, (error, result) => {
+  // Redirect to logged in
+  pool.query(addUserQuery, values, (err, res) => {
     response.redirect('/');
   });
 });
@@ -223,7 +227,7 @@ app.post('/login', (request, response) => {
     shaObj.update(inputPassword);
     const hashedInputPassword = shaObj.getHash('HEX');
 
-    if (inputPassword !== savedPassword) {
+    if (hashedInputPassword !== savedPassword) {
       console.log('We didn\'t recognize your password. Please try again!');
       return;
     }
@@ -232,6 +236,14 @@ app.post('/login', (request, response) => {
     response.cookie('userId', userId);
     response.redirect('/');
   });
+});
+
+// User logs out
+app.get('/logout', (req, res) => {
+  // delete cookies
+  res.clearCookie('loggedIn');
+  res.clearCookie('userId');
+  res.redirect('/');
 });
 
 /* ============ CONTRIBUTE RESOURCES =========== */
