@@ -1,12 +1,7 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0)">
-<rect width="100" height="100" fill="black"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M40 33.5132L42.0318 34.7577L71.538 52.8302L73.3962 53.9684L71.538 55.1065L42.0318 73.179L40 74.4235V72.0409V35.8958V33.5132ZM42.6694 38.2785V69.6583L68.2855 53.9684L42.6694 38.2785Z" fill="white"/>
-<rect x="-5" width="109" height="17" fill="#333333"/>
-</g>
-<defs>
-<clipPath id="clip0">
-<rect width="100" height="100" fill="white"/>
-</clipPath>
-</defs>
+<svg width="102" height="102" viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="100" height="100" fill="#F24E1E"/>
+<rect x="13" y="13" width="72" height="72" rx="10" fill="black"/>
+<rect x="21" y="20" width="72" height="72" rx="10" stroke="black"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M38 29L40.0318 30.2445L69.538 48.317L71.3962 49.4552L69.538 50.5933L40.0318 68.6659L38 69.9103V67.5277V31.3826V29ZM40.6694 33.7653V65.1451L66.2855 49.4552L40.6694 33.7653Z" fill="white"/>
+<rect x="1" y="1" width="100" height="100" stroke="black" stroke-width="2"/>
 </svg>

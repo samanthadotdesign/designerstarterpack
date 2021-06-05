@@ -189,8 +189,14 @@ button.nav-btn {
 header {
   padding: var(--d-xs) var(--d-m);
   background-color: var(--light-bg);
+
   display: flex;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  z-index: 2;
 }
 
 header h1,
@@ -427,4 +433,19 @@ input {
 .form-div button {
   margin-top: var(--d-xs);
   text-align: center;
+}
+
+/* ===== BADGES ===== */
+
+div.badges-div {
+  max-height: calc(100vh - 62px);
+  overflow: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: -2;
+}
+
+div.badge > img {
+  max-width: 20vw;
 }

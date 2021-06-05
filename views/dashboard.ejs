@@ -71,5 +71,13 @@
       <% }) %>
     </div>
     <% }) %>
+
+    <div class="badges-div">
+      <% categoriesCompleted.forEach( (category) => { %>
+      <div class="badge">
+        <img src="<%= category.category_img %>" />
+      </div>
+      <% }) %>
+    </div>
   </main>
 </body>
