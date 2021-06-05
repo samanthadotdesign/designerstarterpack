@@ -124,7 +124,7 @@ const checkCategoryComplete = (userId, skillId) => {
   pool.query(categoryIdQuery)
     .then(
       (categoryIdRes) => {
-        categoryId = categoryIdRes;
+        categoryId = categoryIdRes.rows[0].category_id;
         // Count the number of skills in that category
         const countSkillsCategoryQuery = `SELECT COUNT (*) FROM skills WHERE category_id=${categoryId}`;
         return pool.query(countSkillsCategoryQuery);
@@ -136,21 +136,18 @@ const checkCategoryComplete = (userId, skillId) => {
       // Store the skillCount for the category
       // Compare this count with the next userSkillCount
       (countSkillsCategoryRes) => {
-        skillsCount = countSkillsCategoryRes;
-
-        console.log('user Id', userId);
-        console.log('countskillscategoryRes', countSkillsCategoryRes);
+        skillsCount = countSkillsCategoryRes.rows[0].count;
 
         // Get the user's skills count for that category
         const countUserSkillsCategoryQuery = `
           SELECT
-            user_skills.id,
+            user_skills.skill_id,
+            user_skills.user_id,
             skills.id,
-            skills.category_id,
-            COUNT (*)
+            skills.category_id
           FROM user_skills
-          INNER JOIN skills ON user_skills.id=skills.id
-          WHERE skills.category_id=${categoryId} AND user_skills.id=${userId}`;
+          INNER JOIN skills ON user_skills.skill_id=skills.id
+          WHERE skills.category_id=${categoryId} AND user_skills.user_id=${userId} AND user_skills.skill_completed=true`;
 
         return pool.query(countUserSkillsCategoryQuery);
       },
@@ -159,10 +156,16 @@ const checkCategoryComplete = (userId, skillId) => {
       },
     ).then(
       (countUserSkillsCategoryRes) => {
-        userSkillsCount = countUserSkillsCategoryRes;
+        const userSkillsArr = countUserSkillsCategoryRes.rows;
+        // userSkillsArr returns [ { skill_id: 27, user_id: 8, id: 27, category_id: 8 }, ...]
+        userSkillsCount = userSkillsArr.length;
+
+        console.log(userSkillsCount);
+        console.log(skillsCount);
 
         // If the user has completed all the skills in this category, mark as complete
         if (userSkillsCount === skillsCount) {
+          console.log('yay');
           const markCategoryCompleteQuery = `
           UPDATE user_categories
           SET category_completed=true
@@ -206,6 +209,7 @@ app.get('/', (request, response) => {
       skillsCompleted: results[4],
       categoriesCompleted: results[5],
     };
+
     colorSkills(appData.skills, appData.skillsCompleted);
     // Calculates how many categories are complete
     // database.categoriesCompleted returns array of objects [ { category_id: 1} ]
@@ -245,6 +249,7 @@ app.put('/complete-skill/:id', async (request, response) => {
 
     // Check if category is complete
     checkCategoryComplete(userId, skillId);
+
     console.log('check category complete ran');
   } catch (err) {
     console.error(err.stack);
@@ -260,7 +265,7 @@ app.put('/complete-skill/:id', async (request, response) => {
  * When user clicks "Uncomplete Skill" inside div.resources
  * Updates SQL table user_skills
  */
-app.put('/uncomplete-skill/:id', async (req, res) => {
+app.put('/uncomplete-skill/:id', (req, res) => {
   const { id } = req.params;
   const { userId } = req.cookies;
 
@@ -268,22 +273,15 @@ app.put('/uncomplete-skill/:id', async (req, res) => {
   const markCategoryUncompleteQuery = `UPDATE user_categories SET category_completed=false WHERE user_id=${userId} AND skill_id=${id}`;
 
   // Promise all
-  try {
-    await pool.query(markSkillUncompleteQuery);
-    await pool.query(markCategoryUncompleteQuery);
-    res.redirect('/');
-  } catch (err) {
-    console.log(err.stack);
-  }
+  Promise.all([markSkillUncompleteQuery, markCategoryUncompleteQuery]).then(() => res.redirect('/'));
+
+  // try {
+  //   await pool.query(markSkillUncompleteQuery);
+  //   await pool.query(markCategoryUncompleteQuery);
+  // } catch (err) {
+  //   console.log(err.stack);
+  // }
 });
-
-/**
- * When user clicks "Claim badge"
- *
- */
-// app.put('/claim-badge/:id', async (req, res) => {
-
-// });
 
 /* ============ HOMEPAGE & LOGIN =========== */
 
