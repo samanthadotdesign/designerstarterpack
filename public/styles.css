@@ -13,6 +13,11 @@
   margin: 0;
 }
 
+body {
+  transition: background-color 0.7s;
+  overflow-x: hidden;
+}
+
 html {
   --primary: #000;
   --secondary: #000;
@@ -50,6 +55,10 @@ html {
 
   --d-xxl: 60px;
   --m-xxl: 48px;
+
+  /* Animation speeds */
+  --x-speed: 13s;
+  --y-speed: 7s;
 }
 
 /* ===== TYPOGRAPHY ===== */
@@ -189,26 +198,34 @@ button.nav-btn {
 header {
   padding: var(--d-xs) var(--d-m);
   max-height: var(--d-xxl);
-  background-color: var(--light-bg);
+  width: 100vw;
 
   display: flex;
   justify-content: space-between;
+  align-items: center;
   position: sticky;
   top: 0;
   left: 0;
 
   z-index: 2;
-
-  transition: all 0.5s ease-in;
 }
 
-header h1,
+header div.logo img {
+  z-index: 4;
+  width: 70%;
+  transition: all 0.4s ease-in-out;
+}
+
+header.scrolled div.logo img {
+  width: 50%;
+}
+
+header nav a {
+  font-size: var(--d-s);
+}
+
 h1 {
   font-size: var(--d-l);
-}
-
-header.scrolled h1 {
-  font-size: var(--d-m);
 }
 
 /* ===== CONTAINER ===== */
@@ -250,16 +267,10 @@ main.dashboard {
 section.skills-section {
   padding: var(--d-m);
   min-height: calc(100vh - var(--d-xxl));
-  background-color: var(--light-bg);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-section.skills-section:nth-child(even) {
-  background-color: var(--dark-neutral);
-  color: var(--white);
 }
 
 ul.gallery-list {
@@ -340,7 +351,7 @@ ul.gallery-list > li > figure > img {
   left: 50%;
   transform: translateX(-20%);
 
-  z-index: 2;
+  z-index: 3;
 }
 
 .gallery-list > li:hover > div.resources {
@@ -447,12 +458,58 @@ input {
 div.badges-div {
   max-height: calc(100vh - 62px);
   overflow: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
-  z-index: -2;
+  z-index: 1;
+  display: flex;
 }
 
 div.badge > img {
   max-width: 15vw;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(100deg);
+  }
+}
+
+@keyframes bounce_x {
+  100% {
+    transform: translateX(calc(100vw - 800px));
+  }
+}
+
+@keyframes bounce_y {
+  100% {
+    transform: translateY(calc(50vh - 500px));
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.bounce_x {
+  animation: bounce_x var(--x-speed) linear infinite alternate;
+}
+.bounce_y {
+  animation: bounce_y var(--y-speed) linear infinite alternate;
+}
+
+.rotate {
+  animation: rotate 3s infinite alternate cubic-bezier(1, 0, 0, 1);
+}
+
+.spin {
+  animation: spin 30s linear infinite;
 }

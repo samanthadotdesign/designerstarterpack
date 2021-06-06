@@ -5,14 +5,19 @@
   <main class="dashboard">
     <% sections.forEach( (section) => { %>
     <!-- Logic for when we put "full-width-category" class or not -->
-    <section class="skills-section">
+    <section
+      class="skills-section"
+      data-background="<%= section.data_bg %>"
+      data-color="<%= section.data_color %>"
+    >
       <h1><%= section.section_name %></h1>
       <% categories.filter(category => category.section_id ===
       section.id).forEach ( (category) => { %>
 
       <ul class="gallery-list">
         <% skills.filter(skill => skill.category_id === category.id).forEach (
-        (skill,i) => { %>
+        (skill) => { %>
+
         <li id="<%= category.id %>">
           <div class="resources">
             <div class="resource-content">
@@ -72,8 +77,8 @@
 
     <div class="badges-div">
       <% categoriesCompleted.forEach( (category) => { %>
-      <div class="badge">
-        <img src="<%= category.category_img %>" />
+      <div class="badge bounce_x spin">
+        <img class="bounce_y" src="<%= category.category_img %>" />
       </div>
       <% }) %>
     </div>

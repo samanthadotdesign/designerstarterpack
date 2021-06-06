@@ -46,7 +46,7 @@ pool.connect();
  * @returns {obj} – { sections, categories, skills, resources }
  */
 const getDashboardData = (userId, callback) => {
-  const listSectionsQuery = 'SELECT * FROM sections';
+  const listSectionsQuery = 'SELECT * FROM sections ORDER BY id ASC';
   const listCategoriesQuery = 'SELECT * FROM categories';
   const listSkillsQuery = 'SELECT * FROM skills';
   const listResourcesQuery = 'SELECT * FROM resources';
@@ -178,7 +178,7 @@ const checkCategoryComplete = (userId, skillId) => {
           const markCategoryCompleteQuery = `
           INSERT INTO user_categories (user_id, category_id, category_completed) 
           VALUES (${userId}, ${categoryId}, true)
-          ON CONFLICT (user_id, category_id)
+          ON CONFLICT (user_id,category_id)
           DO 
           UPDATE SET category_completed=true`;
 

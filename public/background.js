@@ -14,24 +14,16 @@ document.addEventListener('scroll', () => {
   }
 });
 
-/* =============== SECTION PARALLAX =========== */
+/* =============== BACKGROUND FADE IN =========== */
 
-const sections = document.querySelectorAll('.skills-section');
-const bodyTag = document.querySelector('body');
+const changeBgColorOnScroll = () => {
+  const sections = document.querySelectorAll('.skills-section');
 
-const addPageScroll = () => {
   const topViewport = window.pageYOffset;
   const midViewport = topViewport + (window.innerHeight / 2);
 
   // // For the middle of the section
-  sections.forEach((section, i) => {
-  //   // For every even section, add the data-background attribute
-  //   if (i % 2 === 0) {
-  //     section.setAttribute('data-background', '#000');
-  //   } else {
-  //     section.setAttribute('data-background', '#fff');
-  //   }
-
+  sections.forEach((section) => {
     const topSection = section.offsetTop;
     const midSection = topSection + (section.offsetHeight / 2);
 
@@ -39,74 +31,41 @@ const addPageScroll = () => {
     const distanceToSection = midViewport - midSection;
 
     // Check the background
-    if (distanceToSection > -100) {
-    // const dataBackground = section.getAttribute('data-background');
-      bodyTag.style.backgroundColor = '#ccc';
-      console.log('yay');
+    if (distanceToSection > -300) {
+      const dataBackground = section.getAttribute('data-background');
+      const dataColor = section.getAttribute('data-color');
+      const bodyTag = document.querySelector('body');
+      bodyTag.style.backgroundColor = dataBackground;
+      bodyTag.style.color = dataColor;
     }
   });
 };
 
-addPageScroll();
-
 document.addEventListener('scroll', () => {
-  addPageScroll();
+  changeBgColorOnScroll();
 });
 
-window.addEventListener('resize', () => {
-  addPageScroll();
+/* =============== BADGE ANIMATION =========== */
+
+const badges = document.querySelectorAll('.badge');
+
+const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+badges.forEach((badge, i) => {
+  const randomNumber = random(0, 360);
+  // create a bit of randomness for our animation delay
+  console.log(randomNumber);
+  badge.animate(
+    [
+      { transform: 'rotate(0deg)' },
+      { transform: `rotate(${randomNumber}deg)` },
+      { transform: 'rotate(0deg)' },
+    ],
+    {
+      // Use the index to create a staggered animation delay
+      delay: 300 * i,
+      duration: 5000,
+      iterations: Infinity,
+    },
+  );
 });
-
-// // Scroll effect for changing background color
-// const bgColorChange = () => {
-//   const sections = document.querySelectorAll('section');
-//   const a = document.querySelectorAll('a');
-
-//   const topViewport = window.pageYOffset;
-//   const midViewport = topViewport + (window.innerHeight / 2);
-
-//   sections.forEach((section, index) => {
-//     const topSection = section.offsetTop;
-//     const midSection = topSection + (section.offsetHeight / 2);
-
-//     const distanceToSection = midViewport - midSection;
-
-//     if (distanceToSection > -300) {
-//       const dataBackground = section.getAttribute('data-background');
-//       const dataColor = section.getAttribute('data-color');
-//       const bodyTag = document.querySelector('body');
-//       const menuDivP_tag = document.querySelector('.menu-icon p');
-//       const menuicon_1 = document.querySelector('#top-line');
-//       const menuicon_2 = document.querySelector('#bottom-line');
-//       bodyTag.style.backgroundColor = dataBackground;
-//       bodyTag.style.color = dataColor;
-//       menuDivP_tag.style.color = dataColor;
-//       menuicon_1.style.fill = dataColor;
-//       menuicon_2.style.fill = dataColor;
-//     }
-//   });
-// };
-
-// const runObserver = () => {
-//   const sections = document.querySelectorAll('section');
-//   // intersection observer for h1 fade in and background color change
-//   const observer = new IntersectionObserver((entries) => {
-//     entries.forEach((entry) => {
-//       if (entry.intersectionRatio > 0.0) {
-//         bgColorChange();
-//       }
-//     });
-//   }, {
-//     threshold: [0.0, 0.0, 1.0],
-//   });
-
-//   sections.forEach((section) => {
-//     observer.observe(section);
-//   });
-
-//   document.addEventListener('scroll', () => {
-//     bgColorChange();
-//   });
-// };
-
-// runObserver();

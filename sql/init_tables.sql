@@ -10,7 +10,7 @@ CREATE TABLE user_categories (id SERIAL PRIMARY KEY, user_id INTEGER, category_i
 
 CREATE TABLE user_skills (id SERIAL PRIMARY KEY, user_id INTEGER, skill_id INTEGER, skill_completed BOOLEAN);
 
-CREATE TABLE sections (id SERIAL PRIMARY KEY, section_name TEXT);
+CREATE TABLE sections (id SERIAL PRIMARY KEY, section_name TEXT, data_bg TEXT);
 
 ALTER TABLE user_skills ADD CONSTRAINT userid_skillid UNIQUE (user_id, skill_id);
 ALTER TABLE user_categories ADD CONSTRAINT userid_categoryid UNIQUE (user_id, category_id);
