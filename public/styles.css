@@ -198,6 +198,8 @@ header {
   left: 0;
 
   z-index: 2;
+
+  transition: all 0.5s ease-in;
 }
 
 header h1,
@@ -205,8 +207,8 @@ h1 {
   font-size: var(--d-l);
 }
 
-header.scrolled {
-  background-color: var(--mid-neutral);
+header.scrolled h1 {
+  font-size: var(--d-m);
 }
 
 /* ===== CONTAINER ===== */

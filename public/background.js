@@ -23,14 +23,14 @@ const addPageScroll = () => {
   const topViewport = window.pageYOffset;
   const midViewport = topViewport + (window.innerHeight / 2);
 
-  // For the middle of the section
+  // // For the middle of the section
   sections.forEach((section, i) => {
-    // For every even section, add the data-background attribute
-    if (i % 2 === 0) {
-      section.setAttribute('data-background', '#000');
-    } else {
-      section.setAttribute('data-background', '#fff');
-    }
+  //   // For every even section, add the data-background attribute
+  //   if (i % 2 === 0) {
+  //     section.setAttribute('data-background', '#000');
+  //   } else {
+  //     section.setAttribute('data-background', '#fff');
+  //   }
 
     const topSection = section.offsetTop;
     const midSection = topSection + (section.offsetHeight / 2);
@@ -40,8 +40,9 @@ const addPageScroll = () => {
 
     // Check the background
     if (distanceToSection > -100) {
-      const dataBackground = section.getAttribute('data-background');
-      bodyTag.style.backgroundColor = dataBackground;
+    // const dataBackground = section.getAttribute('data-background');
+      bodyTag.style.backgroundColor = '#ccc';
+      console.log('yay');
     }
   });
 };

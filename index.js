@@ -178,7 +178,7 @@ const checkCategoryComplete = (userId, skillId) => {
           const markCategoryCompleteQuery = `
           INSERT INTO user_categories (user_id, category_id, category_completed) 
           VALUES (${userId}, ${categoryId}, true)
-          ON CONFLICT ON CONSTRAINT category_id
+          ON CONFLICT (user_id, category_id)
           DO 
           UPDATE SET category_completed=true`;
 
@@ -240,19 +240,19 @@ app.put('/complete-skill/:id', (request, response) => {
   const { userId } = request.cookies;
 
   // Update the table if the row exists in user_skills
+  // ON CONFLICT – requires a unique set of columns
+  // user_id: 8, 9 -- skill_id: 4, 4 (multiple rows with the same skill id & user id)
   const markSkillCompleteQuery = `
   INSERT INTO user_skills (user_id, skill_id, skill_completed) 
   VALUES (${userId}, ${skillId}, true)
-  ON CONFLICT (skill_id)
+  ON CONFLICT (user_id, skill_id)
   DO 
   UPDATE SET skill_completed=true`;
 
   const markSkillCompletePromise = pool.query(markSkillCompleteQuery);
 
-  Promise.all([markSkillCompletePromise, checkCategoryComplete(userId, skillId)])
+  return Promise.all([markSkillCompletePromise, checkCategoryComplete(userId, skillId)])
     .then(() => {
-      console.log('marked skill & category completed');
-      // Toggle the Complete -> Uncomplete button
       response.redirect('/');
     })
     .catch((err) => {
@@ -268,20 +268,29 @@ app.put('/uncomplete-skill/:id', (req, res) => {
   const { id } = req.params;
   const { userId } = req.cookies;
 
+  const categoryIdQuery = `SELECT category_id FROM skills WHERE id=${id}`;
+
   const markSkillUncompleteQuery = `UPDATE user_skills SET skill_completed=false WHERE user_id=${userId} AND skill_id=${id}`;
-  const markCategoryUncompleteQuery = `UPDATE user_categories SET category_completed=false WHERE user_id=${userId} AND skill_id=${id}`;
 
-  // Promise all
-  const markSkillUncompletePromise = pool.query(markSkillUncompleteQuery);
-  const markCategoryUncompletePromise = pool.query(markCategoryUncompleteQuery);
-  Promise.all([markSkillUncompletePromise, markCategoryUncompletePromise]).then(() => res.redirect('/'));
+  let categoryId;
 
-  // try {
-  //   await pool.query(markSkillUncompleteQuery);
-  //   await pool.query(markCategoryUncompleteQuery);
-  // } catch (err) {
-  //   console.log(err.stack);
-  // }
+  pool.query(categoryIdQuery)
+    .then((values) => {
+      categoryId = values.rows[0].category_id;
+      return pool.query(markSkillUncompleteQuery);
+    })
+    .then(() => {
+      const markCategoryUncompleteQuery = `
+      UPDATE user_categories
+      SET category_completed=false
+      WHERE user_id=${userId} AND category_id=${categoryId}`;
+
+      return pool.query(markCategoryUncompleteQuery);
+    })
+    .then(() => res.redirect('/'))
+    .catch((err) => {
+      console.error(err);
+    });
 });
 
 /* ============ HOMEPAGE & LOGIN =========== */
