@@ -2,19 +2,17 @@
   <%- include('./partials/header') -%>
 
   <!-- Set maximum container size for ultra wide widths -->
-  <main class="gallery">
+  <main class="dashboard">
     <% sections.forEach( (section) => { %>
     <!-- Logic for when we put "full-width-category" class or not -->
-    <div class="section full-width-category">
+    <section class="skills-section">
       <h1><%= section.section_name %></h1>
-
       <% categories.filter(category => category.section_id ===
       section.id).forEach ( (category) => { %>
 
       <ul class="gallery-list">
         <% skills.filter(skill => skill.category_id === category.id).forEach (
-        (skill) => { %>
-
+        (skill,i) => { %>
         <li id="<%= category.id %>">
           <div class="resources">
             <div class="resource-content">
@@ -69,7 +67,7 @@
         <% }) %>
       </ul>
       <% }) %>
-    </div>
+    </section>
     <% }) %>
 
     <div class="badges-div">

@@ -58,16 +58,24 @@ const getDashboardData = (userId, callback) => {
   ON user_categories.category_id = categories.id
   WHERE user_categories.user_id=${userId} AND user_categories.category_completed=true`;
 
+  const skillsSectionQuery = `
+  SELECT skills.id AS skill_id, skills.skill_img, skills.skill_name, skills.category_id,
+  categories.id, categories.section_id, sections.id, sections.section_name
+  FROM skills
+  INNER JOIN categories ON skills.category_id=categories.id
+  INNER JOIN sections ON sections.id=categories.section_id`;
+
   const listSectionsRes = pool.query(listSectionsQuery);
   const listCategoriesRes = pool.query(listCategoriesQuery);
   const listSkillsRes = pool.query(listSkillsQuery);
   const listResourcesRes = pool.query(listResourcesQuery);
   const skillsCompletedRes = pool.query(skillsCompletedQuery);
   const categoriesCompletedRes = pool.query(categoriesCompletedQuery);
+  const skillsSectionRes = pool.query(skillsSectionQuery);
 
   Promise.all([listSectionsRes, listCategoriesRes,
     listSkillsRes, listResourcesRes, skillsCompletedRes,
-    categoriesCompletedRes])
+    categoriesCompletedRes, skillsSectionRes])
     .then((values) => {
     // values is an array of all the promises in order
       const sectionsArr = values[0].rows;
@@ -76,11 +84,12 @@ const getDashboardData = (userId, callback) => {
       const resourcesArr = values[3].rows;
       const skillsCompletedArr = values[4].rows;
       const categoriesCompletedArr = values[5].rows;
+      const skillsSectionArr = values[6].rows;
 
       // Callback returns array of arrays
       callback(sectionsArr, categoriesArr,
         skillsArr, resourcesArr, skillsCompletedArr,
-        categoriesCompletedArr);
+        categoriesCompletedArr, skillsSectionArr);
     });
 };
 
@@ -121,7 +130,9 @@ const checkCategoryComplete = (userId, skillId) => {
   let userSkillsCount;
 
   // Get the category id for the skill user is marking as complete
-  pool.query(categoryIdQuery)
+  // return here returns the promise for the .catch() or final .then()
+  // Without return here, return only happens in the callback
+  return pool.query(categoryIdQuery)
     .then(
       (categoryIdRes) => {
         categoryId = categoryIdRes.rows[0].category_id;
@@ -137,6 +148,7 @@ const checkCategoryComplete = (userId, skillId) => {
       // Compare this count with the next userSkillCount
       (countSkillsCategoryRes) => {
         skillsCount = countSkillsCategoryRes.rows[0].count;
+        // This returns a string i.e. '5'
 
         // Get the user's skills count for that category
         const countUserSkillsCategoryQuery = `
@@ -160,16 +172,15 @@ const checkCategoryComplete = (userId, skillId) => {
         // userSkillsArr returns [ { skill_id: 27, user_id: 8, id: 27, category_id: 8 }, ...]
         userSkillsCount = userSkillsArr.length;
 
-        console.log(userSkillsCount);
-        console.log(skillsCount);
-
         // If the user has completed all the skills in this category, mark as complete
-        if (userSkillsCount === skillsCount) {
-          console.log('yay');
+        if (userSkillsCount == skillsCount) {
+          // If the row already exists in user_categories, update
           const markCategoryCompleteQuery = `
-          UPDATE user_categories
-          SET category_completed=true
-          WHERE user_id=${userId} AND category_id=${categoryId}`;
+          INSERT INTO user_categories (user_id, category_id, category_completed) 
+          VALUES (${userId}, ${categoryId}, true)
+          ON CONFLICT ON CONSTRAINT category_id
+          DO 
+          UPDATE SET category_completed=true`;
 
           return pool.query(markCategoryCompleteQuery);
         }
@@ -208,12 +219,13 @@ app.get('/', (request, response) => {
       resources: results[3],
       skillsCompleted: results[4],
       categoriesCompleted: results[5],
+      skillSections: results[6],
     };
 
     colorSkills(appData.skills, appData.skillsCompleted);
     // Calculates how many categories are complete
     // database.categoriesCompleted returns array of objects [ { category_id: 1} ]
-    response.render('dashboard', appData);
+    response.render('dashboard-user', appData);
   });
 });
 
@@ -223,42 +235,29 @@ app.get('/', (request, response) => {
  * When user clicks "Complete Skill" inside div.resources
  * Updates SQL table user_skills
  */
-app.put('/complete-skill/:id', async (request, response) => {
+app.put('/complete-skill/:id', (request, response) => {
   const { id: skillId } = request.params;
   const { userId } = request.cookies;
 
-  // If user has marked it as uncomplete before, entry exists in user_skills table
-  const skillExistsQuery = `SELECT * FROM user_skills WHERE user_id=${userId} AND skill_id=${skillId}`;
+  // Update the table if the row exists in user_skills
+  const markSkillCompleteQuery = `
+  INSERT INTO user_skills (user_id, skill_id, skill_completed) 
+  VALUES (${userId}, ${skillId}, true)
+  ON CONFLICT (skill_id)
+  DO 
+  UPDATE SET skill_completed=true`;
 
-  try {
-    const skillExistsRes = await pool.query(skillExistsQuery);
-    // skillExistsRes.rows[0]
-    // returns existing line { id: 1, user_id: 1, skill_id: 1, skill_completed: false }
-    const userSkill = skillExistsRes.rows[0];
+  const markSkillCompletePromise = pool.query(markSkillCompleteQuery);
 
-    // If the row doesn't exist
-    if (userSkill === undefined) {
-      // Add the row inside database
-      const addSkillQuery = `INSERT INTO user_skills (user_id, skill_id, skill_completed) VALUES (${userId}, ${skillId}, true)`;
-      const addSkillRes = await pool.query(addSkillQuery);
-    } else {
-      // Update the row
-      const updateSkillQuery = `UPDATE user_skills SET skill_completed=true WHERE user_id=${userId} AND skill_id=${skillId}`;
-      const updateSkillRes = await pool.query(updateSkillQuery);
-    }
-
-    // Check if category is complete
-    checkCategoryComplete(userId, skillId);
-
-    console.log('check category complete ran');
-  } catch (err) {
-    console.error(err.stack);
-    // Error handling here
-    return;
-  }
-
-  // Toggle the Complete -> Uncomplete button
-  response.redirect('/');
+  Promise.all([markSkillCompletePromise, checkCategoryComplete(userId, skillId)])
+    .then(() => {
+      console.log('marked skill & category completed');
+      // Toggle the Complete -> Uncomplete button
+      response.redirect('/');
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 });
 
 /**
@@ -273,7 +272,9 @@ app.put('/uncomplete-skill/:id', (req, res) => {
   const markCategoryUncompleteQuery = `UPDATE user_categories SET category_completed=false WHERE user_id=${userId} AND skill_id=${id}`;
 
   // Promise all
-  Promise.all([markSkillUncompleteQuery, markCategoryUncompleteQuery]).then(() => res.redirect('/'));
+  const markSkillUncompletePromise = pool.query(markSkillUncompleteQuery);
+  const markCategoryUncompletePromise = pool.query(markCategoryUncompleteQuery);
+  Promise.all([markSkillUncompletePromise, markCategoryUncompletePromise]).then(() => res.redirect('/'));
 
   // try {
   //   await pool.query(markSkillUncompleteQuery);
