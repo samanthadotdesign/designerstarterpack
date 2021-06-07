@@ -365,6 +365,14 @@ app.get('/about', (req, res) => {
   res.render('about');
 });
 
+app.get('/contribute', (req, res) => {
+  res.render('contribute');
+});
+
+app.post('/contribute', (req, res) => {
+  console.log(res);
+});
+
 /* ============ LISTEN =========== */
 
 app.listen(3004);

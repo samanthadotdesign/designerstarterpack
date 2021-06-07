@@ -1,0 +1,28 @@
+<body>
+  <%- include('./partials/header') -%>
+  <main class="container">
+    <div class="about">
+      <br />
+      <h1>Contribute</h1>
+      <div class="form-div">
+        <form action="/contribute" method="post">
+          <div class="input-field">
+            <label for="resource-name">Resource Name</label>
+            <input class="input" type="text" name="resource-name" required />
+          </div>
+          <div class="input-field">
+            <label for="resource-link">Resource Link</label>
+            <input class="input" type="text" name="resource-link" required />
+          </div>
+
+          <div class="input-field">
+            <label for="description">Description (optional)</label>
+            <textarea class="input" name="description" rows="5"></textarea>
+          </div>
+
+          <button class="primary-btn" type="submit">Submit Resource</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
