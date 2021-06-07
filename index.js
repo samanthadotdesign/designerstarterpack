@@ -8,6 +8,7 @@ import jsSHA from 'jssha';
 
 const { Pool } = pg;
 const app = express();
+const PORT = process.argv[2] || 3004;
 
 // Set the view engine
 app.set('view engine', 'ejs');
@@ -371,4 +372,4 @@ app.get('/contribute', (req, res) => {
 
 /* ============ LISTEN =========== */
 
-app.listen(3004);
+app.listen(PORT);
