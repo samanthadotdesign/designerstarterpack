@@ -225,7 +225,7 @@ app.get('/', (request, response) => {
     colorSkills(appData.skills, appData.skillsCompleted);
     // Calculates how many categories are complete
     // database.categoriesCompleted returns array of objects [ { category_id: 1} ]
-    response.render('dashboard-user', appData);
+    response.render('dashboard', appData);
   });
 });
 
@@ -367,10 +367,6 @@ app.get('/about', (req, res) => {
 
 app.get('/contribute', (req, res) => {
   res.render('contribute');
-});
-
-app.post('/contribute', (req, res) => {
-  console.log(res);
 });
 
 /* ============ LISTEN =========== */

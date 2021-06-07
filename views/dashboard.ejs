@@ -2,18 +2,19 @@
   <%- include('./partials/header') -%>
 
   <!-- Set maximum container size for ultra wide widths -->
-  <main class="gallery">
+  <main class="dashboard">
     <% sections.forEach( (section) => { %>
     <!-- Logic for when we put "full-width-category" class or not -->
-    <div class="section full-width-category">
+    <section
+      class="skills-section"
+      data-background="<%= section.data_bg %>"
+      data-color="<%= section.data_color %>"
+    >
       <h1><%= section.section_name %></h1>
-
-      <% categories.filter(category => category.section_id ===
-      section.id).forEach ( (category) => { %>
-
       <ul class="gallery-list">
-        <% skills.filter(skill => skill.category_id === category.id).forEach (
-        (skill) => { %>
+        <% categories.filter(category => category.section_id ===
+        section.id).forEach ( (category) => { %> <% skills.filter(skill =>
+        skill.category_id === category.id).forEach ( (skill) => { %>
 
         <li id="<%= category.id %>">
           <div class="resources">
@@ -23,7 +24,7 @@
                 <% resources.filter( resource => resource.skill_id === skill.id
                 ).forEach( (resource) => { %>
                 <li>
-                  <a href="<%= resource.resource_link %> "
+                  <a href="<%= resource.resource_link %>" target="_blank"
                     ><%= resource.resource_name %>
                   </a>
                 </li>
@@ -66,16 +67,15 @@
           </figure>
         </li>
 
-        <% }) %>
+        <% }) %> <% }) %>
       </ul>
-      <% }) %>
-    </div>
+    </section>
     <% }) %>
 
     <div class="badges-div">
       <% categoriesCompleted.forEach( (category) => { %>
-      <div class="badge">
-        <img src="<%= category.category_img %>" />
+      <div class="badge bounce_x spin">
+        <img class="bounce_y" src="<%= category.category_img %>" />
       </div>
       <% }) %>
     </div>

@@ -558,16 +558,16 @@ div.badge > img {
 
 @keyframes bounce_y {
   100% {
-    transform: translateY(calc(50vh - 500px));
+    transform: translateY(100vh);
   }
 }
 
 @keyframes spin {
   0% {
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(0, 0%) rotate(0deg);
   }
   100% {
-    transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(0, 100%) rotate(360deg);
   }
 }
 

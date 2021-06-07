@@ -44,28 +44,3 @@ const changeBgColorOnScroll = () => {
 document.addEventListener('scroll', () => {
   changeBgColorOnScroll();
 });
-
-/* =============== BADGE ANIMATION =========== */
-
-const badges = document.querySelectorAll('.badge');
-
-const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-badges.forEach((badge, i) => {
-  const randomNumber = random(0, 360);
-  // create a bit of randomness for our animation delay
-  console.log(randomNumber);
-  badge.animate(
-    [
-      { transform: 'rotate(0deg)' },
-      { transform: `rotate(${randomNumber}deg)` },
-      { transform: 'rotate(0deg)' },
-    ],
-    {
-      // Use the index to create a staggered animation delay
-      delay: 300 * i,
-      duration: 5000,
-      iterations: Infinity,
-    },
-  );
-});
