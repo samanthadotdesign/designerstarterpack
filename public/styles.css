@@ -455,6 +455,18 @@ button.uncomplete {
   align-items: center;
 }
 
+@media screen and (max-width: 550px) {
+  .modal-content {
+    margin: 100% auto;
+    transform: translateY(-50%);
+  }
+
+  .form-div input {
+    font-size: var(--m-m);
+    margin-bottom: var(--m-m);
+  }
+}
+
 /* Increase hit-area */
 .close-btn {
   position: absolute;
@@ -533,7 +545,7 @@ div.badges-div {
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: 6;
+  z-index: -1;
   display: flex;
 }
 

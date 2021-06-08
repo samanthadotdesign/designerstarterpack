@@ -121,8 +121,8 @@ const colorSkills = (skillsArr, skillsCompletedArr) => {
 
 /**
  * Checks if the category is complete when the skill is marked complete
- * @param {int} userId – For this user, mark category as complete
- * @param {int} skillId – For this skill, check if its category is complete
+ * @param {int} userId –For this user, mark category as complete
+ * @param {int} skillId –For this skill, check if its category is complete
  */
 const checkCategoryComplete = (userId, skillId) => {
   const categoryIdQuery = `SELECT category_id FROM skills WHERE id=${skillId}`;
@@ -208,6 +208,7 @@ app.get('/', (request, response) => {
   // If the user does not exist, render the homepage
   if (!userId) {
     response.render('homepage');
+    return;
   }
 
   // If user is logged in, show their dashboard with completed skills
@@ -250,11 +251,20 @@ app.put('/complete-skill/:id', (request, response) => {
   DO 
   UPDATE SET skill_completed=true`;
 
+  const sectionIdQuery = `
+  SELECT skills.category_id, skills.id, categories.id, categories.section_id, categories.section_id
+  FROM skills
+  INNER JOIN categories ON skills.category_id=categories.id
+  WHERE skills.id=${skillId}`;
+
   const markSkillCompletePromise = pool.query(markSkillCompleteQuery);
 
-  return Promise.all([markSkillCompletePromise, checkCategoryComplete(userId, skillId)])
-    .then(() => {
-      response.redirect('/');
+  const sectionIdPromise = pool.query(sectionIdQuery);
+
+  return Promise.all([markSkillCompletePromise, checkCategoryComplete(userId, skillId), sectionIdPromise])
+    .then((values) => {
+      const sectionId = values[2].rows[0].section_id;
+      response.redirect(`/#${sectionId}`);
     })
     .catch((err) => {
       console.error(err);
@@ -274,8 +284,9 @@ app.put('/uncomplete-skill/:id', (req, res) => {
   const markSkillUncompleteQuery = `UPDATE user_skills SET skill_completed=false WHERE user_id=${userId} AND skill_id=${id}`;
 
   let categoryId;
+  let sectionId;
 
-  pool.query(categoryIdQuery)
+  return pool.query(categoryIdQuery)
     .then((values) => {
       categoryId = values.rows[0].category_id;
       return pool.query(markSkillUncompleteQuery);
@@ -288,7 +299,15 @@ app.put('/uncomplete-skill/:id', (req, res) => {
 
       return pool.query(markCategoryUncompleteQuery);
     })
-    .then(() => res.redirect('/'))
+    .then(() => {
+      const sectionIdQuery = `SELECT section_id FROM categories WHERE id=${categoryId}`;
+
+      return pool.query(sectionIdQuery);
+    })
+    .then((values) => {
+      sectionId = values.rows[0].section_id;
+      res.redirect(`/#${sectionId}`);
+    })
     .catch((err) => {
       console.error(err);
     });

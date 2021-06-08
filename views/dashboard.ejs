@@ -6,6 +6,7 @@
     <% sections.forEach( (section) => { %>
     <!-- Logic for when we put "full-width-category" class or not -->
     <section
+      id="<%= section.id %>"
       class="skills-section"
       data-background="<%= section.data_bg %>"
       data-color="<%= section.data_color %>"
@@ -16,7 +17,7 @@
         section.id).forEach ( (category) => { %> <% skills.filter(skill =>
         skill.category_id === category.id).forEach ( (skill) => { %>
 
-        <li id="<%= category.id %>">
+        <li>
           <div class="resources">
             <div class="resource-content">
               <h2><%= skill.skill_name %></h2>
