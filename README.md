@@ -40,4 +40,4 @@ _Click the image to direct to video_
 _or view the [Figma prototype](https://www.figma.com/proto/TiH1DMdEklZRkH2A9zgZiO/Designer-Starter-Pack-2021?page-id=15%3A0&node-id=21%3A270&viewport=564%2C81%2C0.3625868260860443&scaling=min-zoom)_
 
 ## :construction: ERD  
-![ERD](https://user-images.githubusercontent.com/31368622/119830587-01d47100-bf2f-11eb-92b2-bdb184ef914f.png) 
+![ERD (8)](https://user-images.githubusercontent.com/31368622/121108166-d9584b00-c83b-11eb-892a-1139d9de9112.png)
