@@ -26,13 +26,26 @@ app.use(methodOverride('_method'));
 // Cookies to save user id for updating skills & SQL table user_skills
 app.use(cookieParser());
 
-// Set the way we will connect to the server
-const pgConnectionConfigs = {
-  user: 'samanthalee',
-  host: 'localhost',
-  database: 'starterpack',
-  port: 5432, // Postgres server always runs on this port
-};
+let pgConnectionConfigs;
+
+// test to see if the env var is set. Then we know we are in Heroku
+if (process.env.DATABASE_URL) {
+  // pg will take in the entire value and use it to connect
+  pgConnectionConfigs = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+} else {
+  // this is the same value as before
+  pgConnectionConfigs = {
+    user: 'samanthalee',
+    host: 'localhost',
+    database: 'starterpack',
+    port: 5432, // Postgres server always runs on this port
+  };
+}
 
 // Create the var we'll use
 const pool = new Pool(pgConnectionConfigs);
