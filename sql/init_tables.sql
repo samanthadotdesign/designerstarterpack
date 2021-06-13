@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS skills;
+DROP TABLE IF EXISTS sections;
+DROP TABLE IF EXISTS resources;
+DROP TABLE IF EXISTS user_categories;
+DROP TABLE IF EXISTS user_skills;
+
 CREATE TABLE users (id SERIAL PRIMARY KEY, user_name TEXT, email TEXT, hashed_password TEXT, profession TEXT);
 
 CREATE TABLE categories (id SERIAL PRIMARY KEY, category_name TEXT, category_img TEXT, section_id INTEGER);

@@ -75,10 +75,10 @@ INSERT INTO user_skills (user_id, skill_id, skill_completed) VALUES
 (1, 5, true),
 (1, 6, true);
 
-INSERT INTO sections (section_name) VALUES
-('Getting Started'),
-('Basics'),
-('System'),
-('Prototype'),
-('Collaboration'),
-('Advanced');
+INSERT INTO sections (section_name, data_bg, data_color) VALUES
+('Getting Started', '#e9e9e9','#000'),
+('Basics', '#f4e6d8', '#000'),
+('System', '#fff', '#000'),
+('Prototype', '#e9e9e9','#000'),
+('Collaboration', '#ccc', '#000'),
+('Advanced''#f4e6d8', '#000');
