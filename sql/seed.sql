@@ -81,4 +81,4 @@ INSERT INTO sections (section_name, data_bg, data_color) VALUES
 ('System', '#fff', '#000'),
 ('Prototype', '#e9e9e9','#000'),
 ('Collaboration', '#ccc', '#000'),
-('Advanced''#f4e6d8', '#000');
+('Advanced','#f4e6d8', '#000');
