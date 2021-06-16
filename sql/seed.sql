@@ -60,8 +60,18 @@ INSERT INTO skills (skill_name, skill_img, category_id) VALUES
 
 
 INSERT INTO resources (resource_name, resource_link, skill_id, contributor_id) VALUES
-('Figma Tutorial: File Browser', 'https://www.youtube.com/watch?v=imKw17OVdAw', 1, 1),
-('Figma For Beginners: Explore Ideas (1/4)', 'https://www.youtube.com/watch?v=dXQ7IHkTiMM&ab_channel=Figma', 1, 1);
+('Figma Files for Non-Designers',
+'https://blog.prototypr.io/figma-files-for-non-designers-5f1d49808f0c', 1, 1)
+('Figma Tips For Non-Designers, Part 1: Structure & UI Basics', 
+'https://www.viget.com/articles/figma-tips-for-non-designers-part-1-structure-ui-basics/', 1, 1)
+('Figma Tutorial: File Browser', 
+'https://www.youtube.com/watch?v=imKw17OVdAw', 1, 1),
+('Figma For Beginners: Explore Ideas (1/4)', 
+'https://www.youtube.com/watch?v=dXQ7IHkTiMM&ab_channel=Figma', 1, 1);
+
+('Preview designs and prototypes in Presentation View', 
+'https://help.figma.com/hc/en-us/articles/360040318013-Preview-designs-and-prototypes-in-Presentation-View', 2,1);
+
 
 INSERT INTO user_categories (user_id, category_id, category_completed) VALUES
 (1, 1, true),

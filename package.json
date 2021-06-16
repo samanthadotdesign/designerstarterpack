@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "## :seedling:\tBackground 1. As a product designer at a lean product startup, I have been bringing my non-designer colleagues closer to the product development process via Figma. Simply having more people find a page and add their comments benefits the entire team.   2. Through my experiences designing and conducting Figma workshops for Tech for She, Friends of Figma Singapore, Padang.Co, and at Funding Societies, I've become more aware of how different beginners learn.",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
@@ -21,12 +20,14 @@
     "jssha": "^3.2.0",
     "matter-js": "^0.17.1",
     "method-override": "^3.0.0",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "sequelize": "^6.6.2"
   },
   "devDependencies": {
     "eslint": "^7.27.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-react": "^7.23.2"
+    "eslint-plugin-react": "^7.23.2",
+    "sequelize-cli": "^6.2.0"
   }
 }
