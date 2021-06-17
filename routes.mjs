@@ -1,4 +1,4 @@
-import db from './models/index.mjs';
+import db from './db/models/index.mjs';
 
 import initDashboardController from './controllers/dashboards.mjs';
 
