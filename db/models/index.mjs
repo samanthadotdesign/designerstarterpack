@@ -30,7 +30,8 @@ db.Resource = initResourceModel(sequelize, Sequelize.DataTypes);
 
 // Defining the relationship
 // user_skills join table
-// One skill has many users, one user can have many skills -> M2M relationship
+// One skill has many users, one user can have many skills -> M-M relationship
+// each of these (34, 35) allows me to call single-directional methods that apply to Instance
 db.Skill.belongsToMany(db.User, { through: 'user_skills' });
 db.User.belongsToMany(db.Skill, { through: 'user_skills' });
 

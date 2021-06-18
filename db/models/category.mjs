@@ -7,24 +7,24 @@ export default function initCategoryModel(sequelize, DataTypes) {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      category_name: {
+      categoryName: {
         type: DataTypes.STRING,
       },
-      category_img: {
+      categoryImg: {
         type: DataTypes.STRING,
       },
-      section_id: {
+      sectionId: {
         type: DataTypes.INTEGER,
         references: {
           model: 'sections',
           key: 'id',
         },
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },

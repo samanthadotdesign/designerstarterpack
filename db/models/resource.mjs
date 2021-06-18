@@ -7,24 +7,24 @@ export default function initResourceModel(sequelize, DataTypes) {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      resource_name: {
+      resourceName: {
         type: DataTypes.STRING,
       },
-      resource_link: {
+      resourceLink: {
         type: DataTypes.STRING,
       },
-      skill_id: {
+      skillId: {
         type: DataTypes.INTEGER,
         references: {
           model: 'skills',
           key: 'id',
         },
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },

@@ -18,11 +18,11 @@ export default function initUserModel(sequelize, DataTypes) {
         type: DataTypes.STRING,
       },
       // Good practice to include created_at & updated_at
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },

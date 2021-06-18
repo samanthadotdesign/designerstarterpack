@@ -7,24 +7,24 @@ export default function initSkillModel(sequelize, DataTypes) {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      skill_name: {
+      skillName: {
         type: DataTypes.STRING,
       },
-      skill_img: {
+      skillImg: {
         type: DataTypes.STRING,
       },
-      category_id: {
+      categoryId: {
         type: DataTypes.INTEGER,
         references: {
           model: 'categories',
           key: 'id',
         },
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
       },
