@@ -4,9 +4,9 @@
  * Does not return anything
  */
 export default function initSkillController(db) {
+  // Adds new skill to user, adds new category if complete
   const index = async (req, res) => {
     const { id: skillId } = req.params;
-    console.log('skillid', skillId);
     // const { userId } = req.cookies;
     const userId = 8;
     try {
@@ -17,11 +17,9 @@ export default function initSkillController(db) {
 
       // can use findByPk
       const user = await db.User.findByPk(userId);
-      console.log('user', user);
 
       // 2. find the instance of the skill
       const skill = await db.Skill.findByPk(skillId);
-      console.log('skill', skill);
 
       // 3. add a new row in the join table user_skill
       // mixin method createUser only applies the instance 'skill'
@@ -35,16 +33,20 @@ export default function initSkillController(db) {
       });
 
       // 5. count the number of user's skills for that category
-      // 'user' instance, count skills with category id
-      // const userSkillsInCategoryCount = await skill.countUsers( {
-      //   where: { categoryId: skill.categoryId, userId: userId }
-      // })
-
-      // check category if complete
-
-      console.log('skills in category', skillsInCategoryCount);
+      // for user_skills table, use user instance
+      const userSkillsInCategory = await user.getSkills({
+        where: { categoryId: skill.categoryId },
+      });
+      const userSkillsInCategoryCount = userSkillsInCategory.length;
 
       // if category is complete, mark category as complete
+      if (skillsInCategoryCount == userSkillsInCategoryCount) {
+        console.log('running if statement');
+        // add a new row in user_categories table
+        // first find instance of the category
+        const category = await db.Category.findByPk(skill.categoryId);
+        await category.addUser(user);
+      }
 
       // redirect to the section id of page
       res.redirect('/');
@@ -52,5 +54,26 @@ export default function initSkillController(db) {
       console.log(error);
     }
   };
-  return { index };
+
+  // Removes skill from user, removes category if exists
+  const remove = async (req, res) => {
+    const { id: skillId } = req.params;
+    // const { userId } = req.cookies;
+    const userId = 8;
+
+    try {
+      const user = await db.User.findByPk(userId);
+      const skill = await db.Skill.findByPk(skillId);
+      await skill.removeUser(user);
+
+      const category = await db.Category.findByPk(skill.categoryId);
+      if (category) {
+        await category.removeUser(user);
+      }
+    } catch (error) {
+      console.log('error removing skill', error);
+    }
+  };
+
+  return { index, remove };
 }

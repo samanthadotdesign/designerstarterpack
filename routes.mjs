@@ -9,4 +9,5 @@ export default function bindRoutes(app) {
 
   app.get('/', DashboardController.index);
   app.put('/complete-skill/:id', SkillController.index);
+  app.put('/uncomplete-skill/:id', SkillController.remove);
 }
