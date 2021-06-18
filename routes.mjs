@@ -8,6 +8,7 @@ export default function bindRoutes(app) {
   const DashboardController = initDashboardController(db);
   const SkillController = initSkillController(db);
   const UserController = initUserController(db);
+  const ContributeController = initContributeCountroller();
 
   app.get('/', DashboardController.index);
 
@@ -17,4 +18,7 @@ export default function bindRoutes(app) {
   app.post('/signup', UserController.signup);
   app.post('/login', UserController.login);
   app.get('/logout', UserController.logout);
+
+  app.get('about', ContributeController.index);
+  app.get('/contribute', ContributeController.form);
 }
