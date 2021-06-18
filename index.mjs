@@ -3,7 +3,6 @@ import express from 'express';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import bindRoutes from './routes.mjs';
-// import jsSHA from 'jssha';
 
 /* ============ CONFIGURATION =========== */
 
@@ -67,25 +66,6 @@ app.listen(PORT);
 
 // /* ============ HOMEPAGE & LOGIN =========== */
 
-// // Allows the user to sign up
-// app.post('/signup', (request, response) => {
-//   // initialise the SHA object
-//   const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
-//   // input the password from the request to the SHA object
-//   shaObj.update(request.body.password);
-//   // get the hashed password as output from the SHA object
-//   const hashedPassword = shaObj.getHash('HEX');
-
-//   // store the hashed password in our DB
-//   const values = [request.body.name, request.body.email, hashedPassword];
-
-//   const addUserQuery = 'INSERT INTO users (user_name, email, hashed_password) VALUES ($1, $2, $3) RETURNING *';
-//   // Redirect to logged in
-//   pool.query(addUserQuery, values, (err, res) => {
-//     response.redirect('/');
-//   });
-// });
-
 // // Allows user to log in
 // app.post('/login', (request, response) => {
 //   const { email: inputEmail, password: inputPassword } = request.body;
@@ -108,9 +88,7 @@ app.listen(PORT);
 //     // res.rows returns array with email objects [ { id: 1, user_name: 'Samantha', ... }]
 //     const { id: userId, user_name, hashed_password: savedPassword } = res.rows[0];
 
-//     const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
-//     shaObj.update(inputPassword);
-//     const hashedInputPassword = shaObj.getHash('HEX');
+//
 
 //     if (hashedInputPassword !== savedPassword) {
 //       console.log('We didn\'t recognize your password. Please try again!');
